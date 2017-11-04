@@ -1,0 +1,129 @@
+@media screen and (min-width: 480px) {
+  body {
+    background: #eee; }
+  #container {
+    background: white;
+    padding: 20px !important;
+    width: 850px;
+    margin: 20px auto; } }
+
+body {
+  font-family: Optima, Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  margin: 0;
+  padding: 0;
+  color: green; }
+
+a {
+  color: #000; }
+
+a:link,
+a:visited {
+  color: #000;
+  text-decoration: none; }
+
+a:focus,
+a:hover {
+  color: #0f0;
+  text-decoration: underline; }
+
+a:active {
+  color: #f00;
+  text-decoration: underline; }
+
+#container {
+  /* We not set a margin internally in ProfitTrain. You can override it if you want a full bleed effect. See the help book. */
+  /* margin: 40pt; */
+  padding: 0; }
+
+#date {
+  float: right;
+  text-align: right; }
+
+#date h2,
+#date p {
+  margin: 0;
+  padding: 0; }
+
+#business_info {
+  float: right;
+  text-align: right; }
+
+#business_info h2,
+#business_info p {
+  margin: 0;
+  padding: 0; }
+
+#business_info img {
+  margin: 0 0 10px 0; }
+
+#table_section {
+  padding-top: 1em; }
+
+.services {
+  width: 100%;
+  font-size: 10pt; }
+
+.services tfoot {
+  font-weight: bold; }
+
+.services th {
+  padding: 3px 10px;
+  text-align: left;
+  border-bottom: #000;
+  border-width: 0 0 1px 0;
+  border-style: none none solid none; }
+
+.services th.cost {
+  text-align: right; }
+
+.services td {
+  padding: 3px 10px;
+  border-bottom: #eee;
+  border-width: 0 0 1px 0;
+  border-style: none none solid none; }
+
+.services td.cost {
+  text-align: right; }
+
+#message {
+  background-color: #ffe;
+  border-color: #000;
+  border-width: 1px;
+  border-style: solid;
+  padding: 1em;
+  margin-bottom: 1em; }
+
+#due {
+  background-color: #FF3;
+  font-weight: bold;
+  float: right;
+  margin-top: 1em;
+  padding: 5px 10px; }
+
+#paidbanner {
+  position: absolute;
+  top: 40pt;
+  right: 40pt; }
+
+#client {
+  width: 48%;
+  float: left; }
+
+#pay_to {
+  width: 48%;
+  float: right; }
+
+#pay_to p,
+#client p {
+  padding-left: 25px; }
+
+.address_headers {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  padding-bottom: 12px; }
+
+#footer {
+  clear: both;
+  margin-top: 3em; }

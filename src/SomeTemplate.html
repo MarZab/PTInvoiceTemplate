@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    {% if invoice.isEstimate %}
+    <title>{{business.labels.CB_Estimate}}</title>
+    {% else %}
+    <title>{{business.labels.CB_Invoice}}</title>
+    {% /if %}
+    <link rel="stylesheet" href="file://{{pathToBundle}}/styles/style.css?{{randomNumberString}}" type="text/css"/>
+</head>
+<body>
+
+{% if invoice.isPaid %}
+<div id="paidbanner">
+    <img src="file://{{pathToBundle}}/images/paid_downhill.png" width="315" height="182"/>
+</div>
+{% /if %}
+
+<div id="container">
+
+    <div id="date">
+        {% if invoice.isEstimate %}
+        <h2>{{ business.labels.CB_Estimate | capitalized }}</h2>
+        {% if invoice.sentDate %}
+        <p>{{invoice.sentDateUsingFormatter.escapedForHTML}}</p>
+        {% /if %}
+        {% else %}
+        <h2>{{ business.labels.CB_Invoice | capitalized }}</h2>
+        {% if invoice.sentDate %}
+        <p>{{invoice.sentDateUsingFormatter.escapedForHTML}}</p>
+        {% else %}
+        <p>{{business.labels.CB_NotYetSent}}</p>
+        {% /if %}
+        {% /if %}
+    </div> <!-- end date -->
+
+    {% if invoice.business.hasLogo %}
+    <p><img class="logo_image" src="file://{{invoice.business.pathToLogoCache}}"
+            width="{{invoice.business.businessLogoWidth}}" height="{{invoice.business.businessLogoHeight}}"
+            alt="{{invoice.business.displayName}}"/></p>
+    {% else %}
+    <h2 class="business_display_name">{{business.displayName.escapedForHTML}}</h2>
+    {% /if %}
+
+    <div id="table_section">
+
+        {% if invoice.isEstimate %}
+        <!-- not showing invoice number for an estimate -->
+        {% else %}
+        <p>{{ business.labels.CB_InvoiceNumber | capitalized }}: {{invoice.invoiceNumber.escapedForHTML}}</p>
+        {% /if %}
+
+        {% if invoice.message.length > 0 %}
+        <div id="message">
+            {{invoice.messageAsHTML}}
+        </div> <!-- end message -->
+        {% /if %}
+
+        <table class="services" cellspacing="0" cellpadding="0">
+            <thead>
+            <tr>
+                {% if invoice.shouldShowDateColumn == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Date}}</th>
+                {% /if %}
+                <th nowrap="nowrap">{{business.labels.CB_Description}}</th>
+                {% if invoice.shouldShowHourAndRateColumns == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Hours}}</th>
+                <th nowrap="nowrap">{{business.labels.CB_Rate}}</th>
+                {% /if %}
+                {% if invoice.shouldShowQuantityAndCountColumns == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Quantity}}</th>
+                <th nowrap="nowrap">{{business.labels.CB_UnitCost}}</th>
+                {% /if %}
+                {% if invoice.allLineItemsAreTaxableForTaxesWeAreUsing == NO %}
+                {% if invoice.usingTax1 %}
+                <th nowrap="nowrap">{{invoice.tax1Label.escapedForHTML}}</th>
+                {% /if %}
+                {% if invoice.usingTax2 %}
+                <th nowrap="nowrap">{{invoice.tax2Label.escapedForHTML}}</th>
+                {% /if %}
+                {% /if %}
+                <th class="cost" nowrap="nowrap">{{business.labels.CB_Cost}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lineItem in invoice.lineItemsOrderedByDateAndDescription %}
+            {% if lineItem.isExpense == NO %}
+            <tr>
+                {% if invoice.shouldShowHourAndRateColumns == YES %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">
+                    {{lineItem.lineItemDescription.escapedForHTML}}{% if lineItem.noteAsHTML.length > 0 %}<br/><br/>{{lineItem.noteAsHTML}}{% /if %}
+                </td>
+                {% if lineItem.costTypeIsTime == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.timeAsHoursInDecimalFormat}}</td>
+                <td nowrap="nowrap" valign="top">{{lineItem.hourlyRateUsingFormatter}}</td>
+                {% else %}
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                {% /if %}
+                {% else %}
+
+                {% if invoice.shouldShowQuantityAndCountColumns == YES %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">
+                    {{lineItem.lineItemDescription.escapedForHTML}}{% if lineItem.noteAsHTML.length > 0 %}<br/><br/>{{lineItem.noteAsHTML}}{% /if %}
+                </td>
+                {% if lineItem.costTypeIsProduct == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.quantityOfProductUsingFormatter}}</td>
+                <td nowrap="nowrap" valign="top">{{lineItem.productCostUsingFormatter}}</td>
+                {% else %}
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                {% /if %}
+                {% else %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">{{lineItem.lineItemDescription.escapedForHTML}}
+                    {{lineItem.lineItemDescriptionExtras.escapedForHTML}}
+                    {% if lineItem.noteAsHTML.length > 0 %}
+                    <br/><br/>{{lineItem.noteAsHTML}}
+                    {% /if %}
+
+                    {% /if %}
+                </td>
+                {% /if %}
+                {% if invoice.allLineItemsAreTaxableForTaxesWeAreUsing == NO %}
+                {% if invoice.usingTax1 %}
+                <td align="center" valign="top">{% if lineItem.taxableForTax1 %}✔{% else %}&nbsp;{% /if %}</td>
+                {% /if %}
+                {% if invoice.usingTax2 %}
+                <td align="center" valign="top">{% if lineItem.taxableForTax2 %}✔{% else %}&nbsp;{% /if %}</td>
+                {% /if %}
+                {% /if %}
+                <td width="10%" class="cost" nowrap="nowrap" valign="top">{{lineItem.costUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            {% /for %}
+            </tbody>
+        </table>
+
+        {% comment %} If the invoice contains line items that are considered expenses we repeat the table code above to
+        show them. Yes this is a bad (repeating code) but I can't think of an easy way around it just yet.{% /comment %}
+        {% if invoice.containsExpenses %}
+
+        <p><strong>{{business.labels.CB_Expenses}}:</strong></p>
+
+        <table class="services" cellspacing="0" cellpadding="0">
+            <thead>
+            <tr>
+                {% if invoice.shouldShowDateColumn == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Date}}</th>
+                {% /if %}
+                <th nowrap="nowrap">{{business.labels.CB_Description}}</th>
+                {% if invoice.shouldShowHourAndRateColumns == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Hours}}</th>
+                <th nowrap="nowrap">{{business.labels.CB_Rate}}</th>
+                {% /if %}
+                {% if invoice.shouldShowQuantityAndCountColumns == YES %}
+                <th nowrap="nowrap">{{business.labels.CB_Quantity}}</th>
+                <th nowrap="nowrap">{{business.labels.CB_UnitCost}}</th>
+                {% /if %}
+                {% if invoice.allLineItemsAreTaxableForTaxesWeAreUsing == NO %}
+                {% if invoice.usingTax1 %}
+                <th nowrap="nowrap">{{invoice.tax1Label.escapedForHTML}}</th>
+                {% /if %}
+                {% if invoice.usingTax2 %}
+                <th nowrap="nowrap">{{invoice.tax2Label.escapedForHTML}}</th>
+                {% /if %}
+                {% /if %}
+                <th class="cost" nowrap="nowrap">{{business.labels.CB_Cost}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lineItem in invoice.lineItemsOrderedByDateAndDescription %}
+            {% if lineItem.isExpense == YES %}
+            <tr>
+                {% if invoice.shouldShowHourAndRateColumns == YES %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">
+                    {{lineItem.lineItemDescription.escapedForHTML}}{% if lineItem.noteAsHTML.length > 0 %}<br/><br/>{{lineItem.noteAsHTML}}{% /if %}
+                </td>
+                {% if lineItem.costTypeIsTime == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.timeAsHoursInDecimalFormat}}</td>
+                <td nowrap="nowrap" valign="top">{{lineItem.hourlyRateUsingFormatter}}</td>
+                {% else %}
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                {% /if %}
+                {% else %}
+
+                {% if invoice.shouldShowQuantityAndCountColumns == YES %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">{{lineItem.lineItemDescription.escapedForHTML}}
+                    {% if lineItem.noteAsHTML.length > 0 %}<br/><br/>{{lineItem.noteAsHTML}}{% /if %}
+                </td>
+                {% if lineItem.costTypeIsProduct == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.quantityOfProductUsingFormatter}}</td>
+                <td nowrap="nowrap" valign="top">{{lineItem.productCostUsingFormatter}}</td>
+                {% else %}
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                <td nowrap="nowrap" valign="top"><span style="color:#ccc;">{{business.labels.CB_NA}}</span></td>
+                {% /if %}
+                {% else %}
+                {% if invoice.shouldShowDateColumn == YES %}
+                <td nowrap="nowrap" valign="top">{{lineItem.datePerformedUsingFormatter}}</td>
+                {% /if %}
+                <td width="90%" valign="top">{{lineItem.lineItemDescription.escapedForHTML}}
+                    {{lineItem.lineItemDescriptionExtras.escapedForHTML}}
+                    {% if lineItem.noteAsHTML.length > 0 %}
+                    <br/><br/>{{lineItem.noteAsHTML}}
+                    {% /if %}
+
+                    {% /if %}
+                </td>
+                {% /if %}
+                {% if invoice.allLineItemsAreTaxableForTaxesWeAreUsing == NO %}
+                {% if invoice.usingTax1 %}
+                <td align="center" valign="top">{% if lineItem.taxableForTax1 %}✔{% else %}&nbsp;{% /if %}</td>
+                {% /if %}
+                {% if invoice.usingTax2 %}
+                <td align="center" valign="top">{% if lineItem.taxableForTax2 %}✔{% else %}&nbsp;{% /if %}</td>
+                {% /if %}
+                {% /if %}
+                <td width="10%" class="cost" nowrap="nowrap" valign="top">{{lineItem.costUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            {% /for %}
+            </tbody>
+        </table>
+
+        <p><strong>{{business.labels.CB_Totals}}:</strong></p>
+
+        {% /if %}
+
+        <table class="services" cellspacing="0" cellpadding="0">
+            <tfoot>
+            {% if invoice.usingTax1 || invoice.usingTax2 %}
+            <tr>
+                <td width="99%" align="right">{{business.labels.CB_Subtotal}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.subtotalCostUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            {% if invoice.usingTax1 %}
+            <tr>
+                <td width="99%" align="right">{{invoice.taxLabel1WithRate}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.tax1CostUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            {% if invoice.usingTax2 %}
+            <tr>
+                <td width="99%" align="right">{{invoice.taxLabel2WithRate}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.tax2CostUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            <tr>
+                <td width="99%" align="right">{{business.labels.CB_TotalCost}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.totalCostUsingFormatter}}</td>
+            </tr>
+            {% if invoice.totalPaid > 0 %}
+            <tr>
+                <td width="99%" align="right">{{business.labels.CB_TotalPaid}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.totalPaidUsingFormatter}}</td>
+            </tr>
+            <tr>
+                <td width="99%" align="right">{{business.labels.CB_TotalDue}}:</td>
+                <td class="cost" nowrap="nowrap">{{invoice.totalDueUsingFormatter}}</td>
+            </tr>
+            {% /if %}
+            </tfoot>
+        </table>
+
+        {% if invoice.isEstimate %}
+        <!-- not showing payment due date info for estimates -->
+        {% else %}
+        {% if invoice.dueOnReceiptBoolValue %}
+        <div class="due">{{business.labels.CB_PaymentDueOnReceipt}}</div>
+        {% else %}
+        <div class="due">{{business.labels.CB_PaymentDueBy}}: {{invoice.dueDateUsingFormatter}}</div>
+        {% /if %}
+        {% /if %}
+
+        <p style="clear:both">&nbsp;</p>
+
+    </div> <!-- end bottom_half -->
+
+    <div id="client">
+        <div class="address_headers">{{business.labels.CB_InvoicedCustomer}}</div>
+        <p>{% if invoice.client.companyName.length > 0 %}{{invoice.client.companyName}}<br/>{% /if %}
+            {% if invoice.client.fullName.length > 0 %}{{invoice.client.fullName}}<br/>{% /if %}
+            {{invoice.client.mailingAddressAsHTML}}
+            {{invoice.client.otherContactInfoAsHTML}}</p>
+    </div>
+
+    <div id="pay_to">
+        <div class="address_headers">{{business.labels.CB_MailPaymentTo}}</div>
+        <p>{% if business.companyName.length > 0 %}{{business.companyName}}<br/>{% /if %}
+            {% if business.fullName.length > 0 %}{{business.fullName}}<br/>{% /if %}
+            {{business.mailingAddressAsHTML}}
+            {{business.otherContactInfoAsHTML}}</p>
+    </div>
+
+    <p id="footer">{{invoice.client.footerTextAsHTML}}</p>
+
+</div> <!-- end container -->
+
+
+</body>
+</html>

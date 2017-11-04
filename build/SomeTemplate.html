@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    
+    <title>Invoice</title>
+    
+    <link rel="stylesheet" href="styles/style.css?0.3768722124995838" type="text/css"/>
+</head>
+<body>
+
+
+
+<div id="container">
+
+    <div id="date">
+        
+        <h2>Invoice</h2>
+        
+        <p>Not yet sent.</p>
+        
+        
+    </div> <!-- end date -->
+
+    
+    <h2 class="business_display_name">Company Display Name</h2>
+    
+
+    <div id="table_section">
+
+        
+        <p>Invoice #: INVOICE-2017-22</p>
+        
+
+        
+        <div id="message">
+            string
+        </div> <!-- end message -->
+        
+
+        <table class="services" cellspacing="0" cellpadding="0">
+            <thead>
+            <tr>
+                
+                <th nowrap="nowrap">Description</th>
+                
+                
+                
+                <th class="cost" nowrap="nowrap">Cost</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            </tbody>
+        </table>
+
+        <!-- If the invoice contains line items that are considered expenses we repeat the table code above to
+        show them. Yes this is a bad (repeating code) but I can't think of an easy way around it just yet.-->
+        
+
+        <table class="services" cellspacing="0" cellpadding="0">
+            <tfoot>
+            
+            
+            
+            <tr>
+                <td width="99%" align="right">Total Cost:</td>
+                <td class="cost" nowrap="nowrap">string</td>
+            </tr>
+            
+            </tfoot>
+        </table>
+
+        
+        
+        <div class="due">Payment due by: string</div>
+        
+        
+
+        <p style="clear:both">&nbsp;</p>
+
+    </div> <!-- end bottom_half -->
+
+    <div id="client">
+        <div class="address_headers">Invoiced Customer:</div>
+        <p>Client Company<br/>
+            string<br/>
+            string
+            string</p>
+    </div>
+
+    <div id="pay_to">
+        <div class="address_headers">Mail payment to:</div>
+        <p>Company Name<br/>
+            Full Name<br/>
+            Mailing Address
+            Other contact</p>
+    </div>
+
+    <p id="footer">string</p>
+
+</div> <!-- end container -->
+
+
+</body>
+</html>
